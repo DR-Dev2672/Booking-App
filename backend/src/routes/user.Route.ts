@@ -4,7 +4,9 @@ const router =Router();
 
 
 router.post("/register",async(req:Request,res:Response)=>{
+    console.log("DB is connected")
      try {
+      
         let user=await User.findOne({email:req.body.email});
         if(user){
             return res.status(400).json({message:"user already exists"})
@@ -18,3 +20,4 @@ router.post("/register",async(req:Request,res:Response)=>{
         
      }    
 })
+export default router
