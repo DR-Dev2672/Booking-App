@@ -2,10 +2,8 @@ import express,{Response,Request} from 'express';
 import cors from 'cors';
 import "dotenv/config";
 import mongoose from 'mongoose'
-import userRouter from './routes/user.Route'
-
-
-
+import userRoutes from './routes/user.Route'
+import authRoute from './routes/auth.Route';
 
 const app=express()
 const PORT=8000;  
@@ -14,7 +12,8 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors())
-app.use("/api/auth",userRouter);
+app.use("/api/auth",authRoute);
+app.use("/api/users",userRoutes)
 
 app.get("/api/test",(req:Request,res:Response)=>{
     res.json({message:"hello from express endpoint"})
