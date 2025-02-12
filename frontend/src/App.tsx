@@ -2,6 +2,7 @@ import { BrowserRouter,Route, Routes } from 'react-router-dom'
 
 import './App.css'
 import Layout from './layout/Layout'
+import Register from './Pages/Register'
 
 
 
@@ -15,6 +16,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout><p>Home Page</p></Layout>} />
       <Route path="/search-page" element={<Layout><p>Search Page</p></Layout>} />
+      <Route path="/register" element={<Layout><Register/></Layout>} />
 
       
     </Routes>
