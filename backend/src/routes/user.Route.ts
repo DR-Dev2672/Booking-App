@@ -16,7 +16,7 @@ router.post("/register",[
    if(!errors.isEmpty()){
       return res.status(400).json({message:errors.array()})
    }
-    console.log("DB is connected");
+    
      try {
       
         let user=await User.findOne({email:req.body.email});
@@ -38,7 +38,7 @@ router.post("/register",[
          maxAge:86400000,
         })
         
-        return res.sendStatus(200);
+        return res.status(200).send({ message: "User registered OK" });
      } catch (error) {
         console.log(error)
         res.status(500).send({message:"something went wrong"})

@@ -16,7 +16,7 @@ router.post(
     check("password", "Password with 6 or more characters required").isLength({
       min: 6,
     }),
-  ],
+  ], 
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,6 +24,7 @@ router.post(
     }
 
     const { email, password } = req.body;
+    console.log("loggggg")
 
     try {
       const user = await User.findOne({ email });
