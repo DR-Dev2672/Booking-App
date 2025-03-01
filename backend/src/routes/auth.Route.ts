@@ -1,11 +1,9 @@
 import express, { Request, Response } from "express";
 import { check, validationResult } from "express-validator";
-
+import {User} from "../models/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model";
 import verifyToken from "../middleware/auth.middleware";
-
 
 const router = express.Router();
 
@@ -16,7 +14,7 @@ router.post(
     check("password", "Password with 6 or more characters required").isLength({
       min: 6,
     }),
-  ], 
+  ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,10 +22,10 @@ router.post(
     }
 
     const { email, password } = req.body;
-    console.log("loggggg")
 
     try {
       const user = await User.findOne({ email });
+      console.log("findit")
       if (!user) {
         return res.status(400).json({ message: "Invalid Credentials" });
       }
