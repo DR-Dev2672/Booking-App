@@ -1,11 +1,18 @@
 import express,{Response,Request} from 'express';
 import cors from 'cors';
 import "dotenv/config";
+import { v2 as cloudinary } from "cloudinary";
 import mongoose from 'mongoose'
 import userRoutes from './routes/user.Route'
 import authRoutes from './routes/auth.Route';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    cloud_api_key:process.env.CLOUDINARY_API_KEY,
+    cloud_secret_key:process.env.CLOUDINARY_SECRET_KEY
+})
 
 const app=express()
 app.use(cookieParser())
@@ -16,7 +23,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors(
     {
-        origin:"http://localhost:5173",
+        origin:process.env.FRONTEND_URL,
         credentials:true
     }
 ))
