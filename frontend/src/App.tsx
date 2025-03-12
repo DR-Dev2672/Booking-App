@@ -4,13 +4,15 @@ import './App.css'
 import Layout from './layout/Layout'
 import Register from './Pages/Register'
 import SignIn from './Pages/SignIn'
+import AddHotel from './Pages/AddHotel'
+import { useAppContext } from './contexts/AppContext'
 
 
 
 
 function App() {
   
-
+const {isLoggedIn}=useAppContext();
   return (
     <>
     <BrowserRouter>
@@ -19,6 +21,16 @@ function App() {
       <Route path="/search-page" element={<Layout><p>Search Page</p></Layout>} />
       <Route path="/register" element={<Layout><Register/></Layout>} />
       <Route path="/sign-in" element={<Layout><SignIn/></Layout>} />
+      
+        {isLoggedIn &&
+        (
+        <>
+        <Route path="/add-hotel" element={<Layout><AddHotel/></Layout>} />
+        </>
+        )
+        }
+      
+      
 
       
     </Routes>
