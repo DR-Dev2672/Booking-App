@@ -1,7 +1,7 @@
 
 import express,{Request,Response } from "express"
 import verifyToken from "../middleware/auth.middleware";
-// import cloudinary from "cloudinary";
+import cloudinary from "cloudinary";
 import multer from "multer";
 import { body } from "express-validator";
 import Hotel, { HotelType } from "../models/hotel.model";
@@ -15,8 +15,8 @@ const upload=multer({
     storage:storage,
     limits:{
         fileSize:5*1024*1024,
-    }
-})
+    },
+});
 
 router.post("/",verifyToken,
 [
@@ -38,9 +38,9 @@ async(req:Request,res:Response)=>{
         const imageFiles=req.files as Express.Multer.File[];
         const newHotel:HotelType=req.body;
 
-        // const imageUrls = await uploadImages(imageFiles);
+        const imageUrls = await uploadImages(imageFiles);
 
-        // newHotel.imageUrls=imageUrls;
+        newHotel.imageUrls=imageUrls;
         newHotel.lastUpdated= new Date;
         newHotel.userId=req.userId;
         const hotel=new Hotel(newHotel);
@@ -55,5 +55,18 @@ async(req:Request,res:Response)=>{
 
 
 })
+
+async function uploadImages(imageFiles: Express.Multer.File[]) {
+    const uploadPromises = imageFiles.map(async (image) => {
+      const b64 = Buffer.from(image.buffer).toString("base64");
+      let dataURI = "data:" + image.mimetype + ";base64," + b64;
+      const res = await cloudinary.v2.uploader.upload(dataURI);
+      return res.url;
+    });
+  
+    const imageUrls = await Promise.all(uploadPromises);
+    return imageUrls;
+  }
+  
 
 export default router
