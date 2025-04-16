@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import userRoutes from './routes/user.Route'
 import authRoutes from './routes/auth.Route';
 import myHotelRoutes from './routes/my-hotels.Route';
+import hotelRoutes from './routes/hotels.Route';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname,"../../frontend/dist")))
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/my-hotels",myHotelRoutes);
+app.use("api/hotels",hotelRoutes);
 
 app.get("/api/test",(req:Request,res:Response)=>{
     res.json({message:"hello from express endpoint"})
