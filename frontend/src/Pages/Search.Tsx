@@ -9,6 +9,8 @@ import HotelTypesFilter from "../components/HotelTypesFilter";
 import FacilitiesFilter from "../components/FacilitiesFilter";
 import PriceFilter from "../components/PriceFilter";
 
+
+
 const Search = () => {
   const search = useSearchContext();
   const [page, setPage] = useState<number>(1);
@@ -117,6 +119,7 @@ const Search = () => {
         {hotelData?.data.map((hotel) => (
           <SearchResultsCard hotel={hotel} />
         ))}
+        {/* <h1>this is result section</h1> */}
         <div>
           <Pagination
             page={hotelData?.pagination.page || 1}
