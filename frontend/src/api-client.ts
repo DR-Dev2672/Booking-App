@@ -113,6 +113,7 @@ export const updateMyHotelById = async (hotelFormData: FormData) => {
       credentials: "include",
     }
   );
+  
 
   if (!response.ok) {
     throw new Error("Failed to update Hotel");
