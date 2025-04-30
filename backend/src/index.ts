@@ -37,12 +37,13 @@ app.use("api/hotels",hotelRoutes);
 
 app.get("/api/test",(req:Request,res:Response)=>{
     res.json({message:"hello from express endpoint"})
-    // res.send("hii from server");
+    res.send("hii from server");
 
 } ) 
 
 app.listen(PORT,()=>{
     console.log(`server is running at PORT:${PORT}`)
+    
 })
 
 
