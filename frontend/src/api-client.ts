@@ -1,6 +1,6 @@
 import { RegisterFormData } from "./Pages/Register";
 import { SignInFormData } from "./Pages/SignIn";
-import {HotelType} from "../../backend/src/models/hotel.model"
+import {HotelType} from "../../backend/src/shared/types";
 import { HotelSearchResponse } from "../../backend/src/shared/types";
 
 const API_BASE_URL=import.meta.env.VITE_API_BASE_URL ||"";
@@ -113,6 +113,7 @@ export const updateMyHotelById = async (hotelFormData: FormData) => {
       credentials: "include",
     }
   );
+
   
 
   if (!response.ok) {
