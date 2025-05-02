@@ -1,46 +1,21 @@
-
-import mongoose, { mongo } from "mongoose";
-
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { UserType } from "../shared/types";
 
-export type userType={
-    isModified(arg0: string): unknown;
-    _id:string,
-    email:string,
-    password:string,
-    firstName:string,
-    lastName:string
-}
-
-const userSchema =new mongoose.Schema({
-    email:{
-        type:String,
-        require:true
-
-    }, 
-    password:{
-        type:String,
-        require:true,
-
-    },
-    firstName:{
-        type:String,
-        require:true,
-
-    },
-    lastName:{
-        type:String,
-        require:true,
-
-    }
-
-})
-
-userSchema.pre<userType>("save",async function(next){
-    if(this.isModified("password")){
-        this.password=await bcrypt.hash(this.password,8);
-    }
-    next();
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
 });
 
-export const User=mongoose.model<userType>("User",userSchema)
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
+  next();
+});
+
+const User = mongoose.model<UserType>("User", userSchema);
+
+export default User;
