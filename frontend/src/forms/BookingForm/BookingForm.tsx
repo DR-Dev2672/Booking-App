@@ -1,16 +1,19 @@
 import { useForm } from "react-hook-form";
 import {
-//   PaymentIntentResponse,
+  PaymentIntentResponse,
   UserType,
 } from "../../../../backend/src/shared/types";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { StripeCardElement } from "@stripe/stripe-js";
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useParams } from "react-router-dom";
-// import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-
+import { useMutation } from "react-query";
+import * as apiClient from "../../api-client";
+import { useAppContext } from "../../contexts/AppContext";
 
 type Props = {
   currentUser: UserType;
-//   paymentIntent: PaymentIntentResponse;
+  paymentIntent: PaymentIntentResponse;
 };
 
 export type BookingFormData = {
@@ -26,28 +29,28 @@ export type BookingFormData = {
   totalCost: number;
 };
 
-const BookingForm = ({ currentUser,  }: Props) => {
-//   const stripe = useStripe();
-//   const elements = useElements();
+const BookingForm = ({ currentUser, paymentIntent }: Props) => {
+  const stripe = useStripe();
+  const elements = useElements();
 
   const search = useSearchContext();
   const { hotelId } = useParams();
 
-//   const { showToast } = useAppContext();
+  const { showToast } = useAppContext();
 
-//   const { mutate: bookRoom, isLoading } = useMutation(
-//     apiClient.createRoomBooking,
-//     {
-//       onSuccess: () => {
-//         showToast({ message: "Booking Saved!", type: "SUCCESS" });
-//       },
-//       onError: () => {
-//         showToast({ message: "Error saving booking", type: "ERROR" });
-//       },
-//     }
-//   );
+  const { mutate: bookRoom, isLoading } = useMutation(
+    apiClient.createRoomBooking,
+    {
+      onSuccess: () => {
+        showToast({ message: "Booking Saved!", type: "SUCCESS" });
+      },
+      onError: () => {
+        showToast({ message: "Error saving booking", type: "ERROR" });
+      },
+    }
+  );
 
-  const {  register } = useForm<BookingFormData>({
+  const { handleSubmit, register } = useForm<BookingFormData>({
     defaultValues: {
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
@@ -57,29 +60,30 @@ const BookingForm = ({ currentUser,  }: Props) => {
       checkIn: search.checkIn.toISOString(),
       checkOut: search.checkOut.toISOString(),
       hotelId: hotelId,
-     
+      totalCost: paymentIntent.totalCost,
+      paymentIntentId: paymentIntent.paymentIntentId,
     },
   });
 
-//   const onSubmit = async (formData: BookingFormData) => {
-//     if (!stripe || !elements) {
-//       return;
-//     }
+  const onSubmit = async (formData: BookingFormData) => {
+    if (!stripe || !elements) {
+      return;
+    }
 
-    // const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
-    //   payment_method: {
-    //     card: elements.getElement(CardElement) as StripeCardElement,
-    //   },
-    // });
+    const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement) as StripeCardElement,
+      },
+    });
 
-    // if (result.paymentIntent?.status === "succeeded") {
-    //   bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
-    // }
-//   };
+    if (result.paymentIntent?.status === "succeeded") {
+      bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
+    }
+  };
 
   return (
     <form
-    //   onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-1 gap-5 rounded-lg border border-slate-300 p-5"
     >
       <span className="text-3xl font-bold">Confirm Your Details</span>
@@ -120,26 +124,28 @@ const BookingForm = ({ currentUser,  }: Props) => {
         <h2 className="text-xl font-semibold">Your Price Summary</h2>
 
         <div className="bg-blue-200 p-4 rounded-md">
-          
+          <div className="font-semibold text-lg">
+            Total Cost: £{paymentIntent.totalCost.toFixed(2)}
+          </div>
           <div className="text-xs">Includes taxes and charges</div>
         </div>
       </div>
 
       <div className="space-y-2">
         <h3 className="text-xl font-semibold"> Payment Details</h3>
-        {/* <CardElement
+        <CardElement
           id="payment-element"
           className="border rounded-md p-2 text-sm"
-        /> */}
+        />
       </div>
 
       <div className="flex justify-end">
         <button
-        //   disabled={isLoading}
+          disabled={isLoading}
           type="submit"
           className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-md disabled:bg-gray-500"
         >
-          {/* {isLoading ? "Saving..." : "Confirm Booking"} */}
+          {isLoading ? "Saving..." : "Confirm Booking"}
         </button>
       </div>
     </form>
