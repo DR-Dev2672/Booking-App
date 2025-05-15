@@ -9,6 +9,7 @@ import myHotelRoutes from './routes/my-hotels.Route';
 import hotelRoutes from './routes/hotels.Route';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import bookingRoutes from './routes/my-bookings.Route';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -34,6 +35,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/my-hotels",myHotelRoutes);
 app.use("/api/hotels",hotelRoutes);
+app.use("/api/my-bookings", bookingRoutes);
 
 app.get("/api/test",(req:Request,res:Response)=>{
     res.json({message:"hello from express endpoint"})
