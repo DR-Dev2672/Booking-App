@@ -8,10 +8,11 @@ import AddHotel from './Pages/AddHotel'
 import { useAppContext } from './contexts/AppContext'
 import MyHotel from './Pages/MyHotel'
 import EditHotel from './Pages/EditHotel'
-import Search from './Pages/Search'
+
 import Details from './Pages/Details'
 import Booking from './Pages/Booking'
 import MyBooking from './Pages/MyBooking'
+import Search from './Pages/Search'
 
 
 
