@@ -32,14 +32,14 @@ const App = () => {
             </Layout>
           }
         />
-        {/* <Route
+        <Route
           path="/search"
           element={
             <Layout>
               <Search />
             </Layout>
           }
-        /> */}
+        />
         <Route
           path="/detail/:hotelId"
           element={
